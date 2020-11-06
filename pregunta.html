@@ -50,10 +50,20 @@
     }
     function sigue() {
         marcador++;
+        //$("#tiempo").html("");
+        // $("#barratiempo").html("");
+        //$("#tiempo").width('0%');
+        // $("#progress").html("");
+        resetBarraTiempo();
         nuevaPregunta();
+
     }
     function pierde() {
         marcador--;
+        // $("#barratiempo").html("");
+        // $("#tiempo").width('0%');
+        // $("#progress").html("");
+        resetBarraTiempo();
         nuevaPregunta();
     }
 
@@ -62,12 +72,10 @@
     var seguimos = true;
     var progress;
     var t = 2000;
-
-
-
     function dibujaBarraTiempo() {
         //temporizador de la barra        
         clearInterval(progress);
+        var seguimos = true;
         progress = setInterval(function () {
             var $caja = $("#barratiempo");
             if ($("#tiempo").width() >= $caja.width()) {
@@ -95,5 +103,10 @@
             }
             $("#tiempo").text(segundo);
         }, 3600);
+    }
+    function resetBarraTiempo() {
+        segundo = 0;
+        seguimos = false;
+        $("#tiempo").width('0%');
     }
 </script>
