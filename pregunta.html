@@ -2,8 +2,8 @@
     <!-- Aquí va el temporizador -->
     <br>
     <div id="barratiempo" class="progress">
-        <div id="tiempo" class="progress preogress-bar-stripped primary progress-bar-animated" role="progressbar"
-            style="width: 0%"></div>
+        <div id="tiempo" class="progress-bar progress-bar-striped primary  progress-bar-animated" role="progressbar"
+            style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
     <br>
     <!-- Los botones del juego -->
@@ -23,9 +23,10 @@
         $.get("http://localhost/EjerciciosLaravel/LARAVEL_EjemploQUIZ/public/api/preguntas/" + tema,
             function (_pregunta) {
                 pregunta = _pregunta;
-                $('#marcador').html(marcador)
+                $('#marcador').html(marcador);
+                dibujaBarraTiempo();
                 //se borra el contenido del div de las preguntas
-                $('#preguntas').html("")
+                $('#preguntas').html("");
                 //botones
                 $('#preguntas').append('<button class="btn btn-block btn-dark disabled">' + pregunta.enunciado + '</button>');
                 $('#preguntas').append('<button id="1" class="btn btn-block btn-primary" onclick="chequeaRespuesta(1)">' + pregunta.r1 + '</button>');
@@ -56,4 +57,43 @@
         nuevaPregunta();
     }
 
+    //el siguiente método controla la barra de tiempo
+    var segundo = 1;
+    var seguimos = true;
+    var progress;
+    var t = 2000;
+
+
+
+    function dibujaBarraTiempo() {
+        //temporizador de la barra        
+        clearInterval(progress);
+        progress = setInterval(function () {
+            var $caja = $("#barratiempo");
+            if ($("#tiempo").width() >= $caja.width()) {
+                clearInterval(progress);
+                segundo = 0;
+                //AQUI PONES LA FUNCIÓN QUE QUIERES EJECUTAR
+                // SI EL TEMPORIZADOR AGOTA EL TIEMPO, por ejemplo, inCorrecta();
+                chequeaRespuesta(-1);
+            } else {
+                if (seguimos) {
+                    $("#tiempo").width($("#tiempo").width() + $caja.width() / 10);
+                    segundo++;
+                }
+            }
+            if (segundo < 5) {
+                $("#tiempo").removeClass("bg-warning");
+                $("#tiempo").removeClass("bg-danger");
+                $("#tiempo").addClass("bg-success");
+            } else if (segundo < 8) {
+                $("#tiempo").removeClass("bg-success");
+                $("#tiempo").addClass("bg-warning");
+            } else {
+                $("#tiempo").removeClass("bg-warning");
+                $("#tiempo").addClass("bg-danger");
+            }
+            $("#tiempo").text(segundo);
+        }, 3600);
+    }
 </script>
